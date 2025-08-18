@@ -41,3 +41,12 @@ export async function createTweet(
 export async function getTweet(wallet: anchor.Wallet, tweetPda: anchor.web3.PublicKey) {
     return await program.account.tweet.fetch(tweetPda);
 }
+
+export async function createLike(wallet: anchor.Wallet,
+    tweetPdas: anchor.web3.PublicKey) {
+    return await program.methods.createLike().accounts({
+        tweet: tweetPdas,
+        authority: wallet.publicKey,
+    }).signers([wallet.payer])
+        .rpc();
+} 

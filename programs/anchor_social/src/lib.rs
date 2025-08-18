@@ -17,4 +17,8 @@ pub mod anchor_social {
     pub fn create_tweet(ctx: Context<CreateTweet>, body: String) -> Result<()> {
         instructions::tweet::create_tweet(ctx, body)
     }
+
+    pub fn create_like(ctx: Context<CreateLike>) -> Result<()> {
+        instructions::tweet::create_like(ctx)
+    }
 }
