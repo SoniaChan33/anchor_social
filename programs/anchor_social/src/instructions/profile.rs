@@ -8,7 +8,10 @@ pub fn create_profile(ctx: Context<CreateProfile>, display_name: String) -> Resu
 
 #[derive(Accounts)]
 pub struct CreateProfile<'info> {
-    #[account(init, payer = user, space = 8 + Profile::INIT_SPACE, seeds = [Profile::SEED_PREFIX.as_bytes(), user.key().as_ref()], bump)]
+    #[account(init,
+         payer = user,
+         space = 8 + Profile::INIT_SPACE, 
+         seeds = [Profile::SEED_PREFIX.as_bytes(), user.key().as_ref()], bump)]
     pub profile: Account<'info, Profile>,
     #[account(mut)]
     pub user: Signer<'info>,
