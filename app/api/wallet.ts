@@ -15,10 +15,9 @@ export function useDefaultWallet() {
     return anchor.Wallet.local();
 }
 
-// 访客钱包 pubkey 2tQibfGH1UX4PEA1dNWJ8zvnpSbKRBr5a5eVhaRxF6EX
+// 访客钱包 pubkey 7rQKPb1bPLS4xU93a43GYmBK7MfY3ChSTSVfA8fcxbRF
 export function useVisitorWallet() {
-    const keypair = anchor.web3.Keypair.fromSecretKey(new Uint8Array([171, 156, 148, 124, 104, 176, 9, 2, 154, 150, 6, 98, 26, 44, 195, 72, 36, 48, 177, 236, 11, 14, 51, 191, 86, 195, 17, 25, 245, 204, 132, 97, 182, 190, 252, 253, 157, 255, 137, 212, 199, 44, 93, 217, 16, 96, 16, 37, 177, 6, 222, 115, 87, 46, 130, 183, 247, 175, 115, 174, 99, 240, 53, 188]));
-
+    const keypair = anchor.web3.Keypair.fromSecretKey(new Uint8Array([199, 44, 7, 45, 215, 225, 251, 241, 125, 159, 245, 168, 181, 13, 31, 125, 176, 26, 201, 98, 185, 65, 196, 111, 140, 246, 82, 117, 81, 56, 124, 234, 101, 205, 242, 37, 140, 14, 248, 97, 252, 35, 37, 241, 53, 181, 12, 84, 155, 10, 242, 3, 118, 29, 49, 52, 216, 63, 28, 2, 246, 240, 206, 14]));
     return new anchor.Wallet(keypair);
 }
 // 35vQtxXXv5rb99eiVrVVrwYMRYc7vscZvXas8zjEnnK5

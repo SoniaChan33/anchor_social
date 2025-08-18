@@ -15,7 +15,7 @@ pub struct CreateTweet<'info> {
     #[account(
         init,
         payer = authority,
-        space = Tweet::INIT_SPACE,
+        space = 8 + Tweet::INIT_SPACE,
         seeds = [
             Tweet::SEED_PREFIX.as_bytes(),
             profile.key().as_ref(),

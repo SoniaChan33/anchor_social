@@ -17,7 +17,7 @@ export async function createTweet(
             Buffer.from("tweet"),
             profilePda.toBuffer(),
             // TODO 这里的语法不太懂
-            Buffer.from(`${profile.tweetCount + 1}`)
+            Buffer.from((profile.tweetCount + 1).toString()) // 修复：使用 toString() 而不是模板字符串
         ],
         program.programId,
 
