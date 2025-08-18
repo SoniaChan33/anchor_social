@@ -53,6 +53,6 @@ import { createTokenMintAccount } from "./api/token";
     // console.log(r6);
 
     const [tokenPda, r] = await createTokenMintAccount(defaultWallet);
-    console.log(tokenPda, r);
+    console.log(tokenPda.toString(), r);
 
 })(); 

@@ -9,7 +9,7 @@ pub fn create_token_mint_account(ctx: Context<CreateTokenMintAccount>) -> Result
 #[derive(Accounts)]
 pub struct CreateTokenMintAccount<'info> {
     #[account(
-        init,
+        init_if_needed,
         payer = authority,
         seeds = [b"mint",],
         bump,

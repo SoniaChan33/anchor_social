@@ -7,7 +7,8 @@ export async function createTokenMintAccount(wallet: anchor.Wallet) {
         program.programId,
     );
 
-    return [splTokenPda, program.methods.createTokenMintAccount().accounts({
+    return [splTokenPda,
+        await program.methods.createTokenMintAccount().accounts({
 
-    }).rpc()];
+        }).rpc()];
 }
