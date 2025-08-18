@@ -21,4 +21,8 @@ pub mod anchor_social {
     pub fn create_like(ctx: Context<CreateLike>) -> Result<()> {
         instructions::tweet::create_like(ctx)
     }
+
+    pub fn create_token_mint_account(ctx: Context<CreateTokenMintAccount>) -> Result<()> {
+        instructions::token::create_token_mint_account(ctx)
+    }
 }

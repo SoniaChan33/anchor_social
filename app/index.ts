@@ -2,6 +2,7 @@ import { useDefaultWallet, useVisitorWallet } from "./api/wallet";
 import { createProfile, getProfile } from "./api/profile";
 import { createTweet, getTweet } from "./api/tweet";
 import { createLike } from "./api/tweet";
+import { createTokenMintAccount } from "./api/token";
 
 (async () => {
     const defaultWallet = useDefaultWallet();
@@ -37,18 +38,21 @@ import { createLike } from "./api/tweet";
     //     console.log("Failed to fetch visitor profile:", error.message);
     // }
 
-    // 创建推文
-    // TODO 这里返回的pda和wallet有啥关系
-    const [pda, r3] = await createTweet(defaultWallet, "Hello, world!");
+    // // 创建推文
+    // // TODO 这里返回的pda和wallet有啥关系
+    // const [pda, r3] = await createTweet(defaultWallet, "Hello, world!");
 
-    const r4 = await getTweet(defaultWallet, pda);
-    console.log(r4);
+    // const r4 = await getTweet(defaultWallet, pda);
+    // console.log(r4);
 
-    // 创建点赞
-    const r5 = await createLike(visitorWallet, pda);
-    console.log("Like created:", r5);
+    // // 创建点赞
+    // const r5 = await createLike(visitorWallet, pda);
+    // console.log("Like created:", r5);
 
-    const r6 = await getTweet(defaultWallet, pda);
-    console.log(r6);
+    // const r6 = await getTweet(defaultWallet, pda);
+    // console.log(r6);
+
+    const [tokenPda, r] = await createTokenMintAccount(defaultWallet);
+    console.log(tokenPda, r);
 
 })(); 
