@@ -3,7 +3,7 @@ import { program } from "./wallet";
 
 export async function createTokenMintAccount(wallet: anchor.Wallet) {
     const [splTokenPda,] = anchor.web3.PublicKey.findProgramAddressSync(
-        [Buffer.from("mint"),],
+        [Buffer.from("mint_v3"),],
         program.programId,
     );
 
