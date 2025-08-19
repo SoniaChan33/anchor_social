@@ -44,9 +44,11 @@ export async function getTweet(wallet: anchor.Wallet, tweetPda: anchor.web3.Publ
 
 export async function createLike(wallet: anchor.Wallet,
     tweetPdas: anchor.web3.PublicKey) {
+    const tweet = await program.account.tweet.fetch(tweetPdas);
     return await program.methods.createLike().accounts({
         tweet: tweetPdas,
         authority: wallet.publicKey,
+        authorWallet: tweet.author
     }).signers([wallet.payer])
         .rpc();
 } 

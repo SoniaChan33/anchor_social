@@ -38,21 +38,26 @@ import { createTokenMintAccount } from "./api/token";
     //     console.log("Failed to fetch visitor profile:", error.message);
     // }
 
-    // // 创建推文
-    // // TODO 这里返回的pda和wallet有啥关系
-    // const [pda, r3] = await createTweet(defaultWallet, "Hello, world!");
+    // 创建推文
+    // TODO 这里返回的pda和wallet有啥关系
+    const [pda, r3] = await createTweet(defaultWallet, "Hello, world!");
 
-    // const r4 = await getTweet(defaultWallet, pda);
-    // console.log(r4);
+    const r4 = await getTweet(defaultWallet, pda);
+    console.log("defaultWallet public key:", defaultWallet.publicKey);
 
-    // // 创建点赞
-    // const r5 = await createLike(visitorWallet, pda);
-    // console.log("Like created:", r5);
+    console.log(r4);
 
-    // const r6 = await getTweet(defaultWallet, pda);
-    // console.log(r6);
+    // 创建点赞
+    const visitorPublicKey = visitorWallet.publicKey;
+    console.log("Visitor public key:", visitorPublicKey.toString());
+    const r5 = await createLike(visitorWallet, pda);
+    console.log("Like created:", r5);
 
-    const [tokenPda, r] = await createTokenMintAccount(defaultWallet);
-    console.log(tokenPda.toString(), r);
+    const r6 = await getTweet(defaultWallet, pda);
+    console.log(r6);
+
+    // // 得先初始化了mintaccount 才可以去调用createlike给别人mint token
+    // const [tokenPda, r] = await createTokenMintAccount(defaultWallet);
+    // console.log(tokenPda.toString(), r);
 
 })(); 
