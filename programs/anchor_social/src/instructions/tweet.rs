@@ -47,6 +47,11 @@ pub fn create_like(ctx: Context<CreateLike>) -> Result<()> {
     ctx.accounts.like.set_inner(like);
     // 打印mint_account的地址
     msg!("mint_account: {}", ctx.accounts.mint_account.key());
+    msg!(
+        "author_token_account: {}",
+        ctx.accounts.author_token_account.key()
+    );
+
     mint_to(
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
