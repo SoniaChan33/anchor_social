@@ -29,4 +29,8 @@ pub mod anchor_social {
     pub fn nft_mint(ctx: Context<NFTMint>, nft_id: String) -> Result<()> {
         instructions::mpl_token_metadata::nft_mint_v1(ctx, nft_id)
     }
+
+    pub fn nft_stake(ctx: Context<NFTStake>) -> Result<()> {
+        instructions::nft_stake::nft_stake(ctx)
+    }
 }
