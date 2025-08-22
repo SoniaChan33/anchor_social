@@ -3,65 +3,76 @@ use crate::state::stake::StakeInfo;
 use crate::state::token::MyToken;
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token::burn;
 use anchor_spl::token::mint_to;
 use anchor_spl::token::transfer;
+use anchor_spl::token::Burn;
 use anchor_spl::token::Mint;
 use anchor_spl::token::MintTo;
 use anchor_spl::token::Token;
 use anchor_spl::token::TokenAccount;
 use anchor_spl::token::Transfer;
 
-pub fn nft_stake(ctx: Context<NFTStake>) -> Result<()> {
-    // 记录质押关系
-    let stake_info = StakeInfo::new(
-        ctx.accounts.authority.key(),
-        ctx.accounts.nft_mint_account.key(),
-    );
-    ctx.accounts.stake_info.set_inner(stake_info.clone());
+#[error_code]
+pub enum UnstakeError {
+    #[msg("can not unstake")]
+    NoAuthority,
+}
 
-    // transfer the nft from the user's associated token account to the staking pool
+pub fn nft_unstake(ctx: Context<NFTUnStake>) -> Result<()> {
+    // 检查质押关系
+    require!(
+        &ctx.accounts.stake_info.nft_mint_account == &ctx.accounts.nft_mint_account.key(),
+        UnstakeError::NoAuthority,
+    );
+    require!(
+        &ctx.accounts.stake_info.staker == &ctx.accounts.authority.key(),
+        UnstakeError::NoAuthority,
+    );
+
+    // 这里就需要反向transfer一下了
+    //todo 为什么反向的就需要seeds
+    let nft_mint_account = ctx.accounts.nft_mint_account.key();
+    let signer_seeds: &[&[&[u8]]] = &[&[
+        StakeInfo::SEED_PREFIX.as_bytes(),
+        nft_mint_account.as_ref(),
+        &[ctx.bumps.stake_info],
+    ]];
+
     transfer(
         CpiContext::new(
             ctx.accounts.token_program.to_account_info(),
             Transfer {
-                from: ctx.accounts.nft_associated_token_account.to_account_info(),
-                to: ctx.accounts.program_receipt_ata.to_account_info(),
-                authority: ctx.accounts.authority.to_account_info(),
-            },
-        ),
-        1,
-    )?;
-
-    // mint 流动性代币
-    let signer_seeds: &[&[&[u8]]] = &[&[
-        MyToken::SEED_PREFIX.as_bytes(),
-        &[ctx.bumps.token_mint_account],
-    ]];
-
-    mint_to(
-        CpiContext::new(
-            ctx.accounts.token_program.to_account_info(),
-            MintTo {
-                mint: ctx.accounts.token_mint_account.to_account_info(),
-                to: ctx.accounts.associated_token_account.to_account_info(),
-                authority: ctx.accounts.token_mint_account.to_account_info(),
+                from: ctx.accounts.program_receipt_ata.to_account_info(),
+                to: ctx.accounts.nft_associated_token_account.to_account_info(),
+                authority: ctx.accounts.stake_info.to_account_info(),
             },
         )
         .with_signer(signer_seeds),
-        10000,
+        1,
+    )?;
+
+    // 销毁流动性代币
+    let amount = ctx.accounts.stake_info.salvage_value(10000);
+    burn(
+        CpiContext::new(
+            ctx.accounts.token_program.to_account_info(),
+            Burn {
+                mint: ctx.accounts.token_mint_account.to_account_info(),
+                from: ctx.accounts.associated_token_account.to_account_info(),
+                authority: ctx.accounts.authority.to_account_info(),
+            },
+        ),
+        amount,
     )?;
 
     Ok(())
 }
 
 #[derive(Accounts)]
-pub struct NFTStake<'info> {
-    /// 接收NFT的账户
-    /// 用于存储质押信息
+pub struct NFTUnStake<'info> {
     #[account(
-        init_if_needed,
-        payer = authority,
-        space = 8 + StakeInfo::INIT_SPACE,
+        mut,
         seeds = [
             StakeInfo::SEED_PREFIX.as_bytes(),
             nft_mint_account.key().as_ref(),
@@ -72,8 +83,7 @@ pub struct NFTStake<'info> {
 
     // 接收NFT的token账户
     #[account(
-        init_if_needed,
-        payer = authority, // 注意这里的payer是自己账户
+        mut,
         associated_token::mint = nft_mint_account,
         associated_token::authority = stake_info,
     )]
@@ -91,8 +101,7 @@ pub struct NFTStake<'info> {
     pub token_mint_account: Box<Account<'info, Mint>>,
 
     #[account(
-        init_if_needed,
-        payer = authority,
+        mut,
         associated_token::mint = token_mint_account,
         associated_token::authority = authority,
     )]

@@ -12,3 +12,6 @@ pub use mpl_token_metadata::*;
 
 pub mod nft_stake;
 pub use nft_stake::*;
+
+pub mod nft_unstake;
+pub use nft_unstake::*;

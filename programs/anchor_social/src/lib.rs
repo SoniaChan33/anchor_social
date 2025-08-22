@@ -33,4 +33,8 @@ pub mod anchor_social {
     pub fn nft_stake(ctx: Context<NFTStake>) -> Result<()> {
         instructions::nft_stake::nft_stake(ctx)
     }
+
+    pub fn nft_unstake(ctx: Context<NFTUnStake>) -> Result<()> {
+        instructions::nft_unstake::nft_unstake(ctx)
+    }
 }

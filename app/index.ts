@@ -4,7 +4,7 @@ import { createTweet, getTweet } from "./api/tweet";
 import { createLike } from "./api/tweet";
 import { createTokenMintAccount, createTokenMint } from "./api/token";
 import { nftMint } from "./api/nft";
-import { stakeNFT } from "./api/stake";
+import { stakeNFT, unstakeNFT } from "./api/stake";
 
 (async () => {
     const defaultWallet = useDefaultWallet();
@@ -62,16 +62,20 @@ import { stakeNFT } from "./api/stake";
     // const [tokenPda, r] = await createTokenMintAccount(defaultWallet);
     // console.log(tokenPda.toString(), r);
 
-    // const r = await createTokenMint();
-    // console.log(r);
+    const r = await createTokenMint();
+    console.log(r);
 
-    // const r2 = await nftMint(defaultWallet, "1");
-    // console.log("NFT Minted:", r2);
+    const r2 = await nftMint(defaultWallet, "1");
+    console.log("NFT Minted:", r2);
 
 
     // 质押nft给到另外的账户
     const nft = await stakeNFT(defaultWallet, "1");
     console.log("NFT Staked:", nft);
+
+    // 解质押
+    const l2 = await unstakeNFT(defaultWallet, "1");
+    console.log("NFT Unstaked:", l2);
 
 
 

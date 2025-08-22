@@ -7,3 +7,10 @@ export async function stakeNFT(wallet: anchor.Wallet, nft_id: string) {
         nftMintAccount: getNftMintAccount(nft_id),
     }).signers([wallet.payer]).rpc();
 }
+
+export async function unstakeNFT(wallet: anchor.Wallet, nft_id: string) {
+    return await program.methods.nftUnstake().accounts({
+        nftMintAccount: getNftMintAccount(nft_id),
+        authority: wallet.payer.publicKey,
+    }).signers([wallet.payer]).rpc();
+}
