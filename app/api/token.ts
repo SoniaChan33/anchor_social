@@ -12,3 +12,7 @@ export async function createTokenMintAccount(wallet: anchor.Wallet) {
 
         }).rpc()];
 }
+
+export async function createTokenMint() {
+    return await program.methods.createTokenMintAccount().rpc();
+}

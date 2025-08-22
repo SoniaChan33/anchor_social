@@ -1,5 +1,6 @@
 use crate::state::like::*;
 use crate::state::profile::*;
+use crate::state::token::MyToken;
 use crate::state::tweet::*;
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::AssociatedToken;
@@ -60,7 +61,7 @@ pub fn create_like(ctx: Context<CreateLike>) -> Result<()> {
                 to: ctx.accounts.author_token_account.to_account_info(),
                 authority: ctx.accounts.mint_account.to_account_info(),
             },
-            &[&[b"mint_v3", &[ctx.bumps.mint_account]]],
+            &[&[MyToken::SEED_PREFIX.as_bytes(), &[ctx.bumps.mint_account]]],
         ),
         100,
     )?;
@@ -71,7 +72,7 @@ pub fn create_like(ctx: Context<CreateLike>) -> Result<()> {
 pub struct CreateLike<'info> {
     #[account(
         mut,
-        seeds = [b"mint_v3",],
+        seeds = [MyToken::SEED_PREFIX.as_bytes(),],
         bump,
     )]
     pub mint_account: Account<'info, Mint>,
@@ -103,7 +104,6 @@ pub struct CreateLike<'info> {
     #[account(mut)]
     pub tweet: Account<'info, Tweet>,
 
-    // TODO 为什么每次指令里面的profile都需要也有一个种子参数？
     #[account(mut, seeds = [Profile::SEED_PREFIX.as_bytes(), authority.key().as_ref()], bump)]
     pub profile: Account<'info, Profile>,
     #[account(mut)]

@@ -1,3 +1,4 @@
+use crate::state::token::MyToken;
 use anchor_lang::prelude::*;
 use anchor_spl::metadata::create_metadata_accounts_v3;
 use anchor_spl::metadata::mpl_token_metadata::types::DataV2;
@@ -8,7 +9,8 @@ use anchor_spl::token::Token;
 
 pub fn create_token_mint_account(ctx: Context<CreateTokenMintAccount>) -> Result<()> {
     // TODO 这个是啥 怎么进行定义的？
-    let signer_seeds: &[&[&[u8]]] = &[&[b"mint_v3", &[ctx.bumps.mint_account]]];
+    let signer_seeds: &[&[&[u8]]] =
+        &[&[MyToken::SEED_PREFIX.as_bytes(), &[ctx.bumps.mint_account]]];
     create_metadata_accounts_v3(
         CpiContext::new_with_signer(
             ctx.accounts.token_metadata_program.to_account_info(),
@@ -25,9 +27,9 @@ pub fn create_token_mint_account(ctx: Context<CreateTokenMintAccount>) -> Result
         ),
         // TODO 这是token的内容吗
         DataV2 {
-            name: "tokenchs".to_string(),
-            symbol: "TKS".to_string(),
-            uri: "https://example.com/tokenchs".to_string(),
+            name: MyToken::TOKEN_NAME.to_string(),
+            symbol: MyToken::TOKEN_SYMBOL.to_string(),
+            uri: MyToken::TOKEN_URL.to_string(),
             seller_fee_basis_points: 0,
             creators: None,
             collection: None,
@@ -58,10 +60,10 @@ pub struct CreateTokenMintAccount<'info> {
     #[account(
         init_if_needed,
         payer = authority,
-        seeds = [b"mint_v3",],
+        seeds = [MyToken::SEED_PREFIX.as_bytes(),],
         bump,
-        mint::decimals = 100,
-        mint::authority = mint_account.key(),
+        mint::decimals = MyToken::TOKEN_DECIMALS,
+        mint::authority = mint_account.key(), // 谁有权限去mint
     )]
     pub mint_account: Account<'info, Mint>,
 

@@ -25,4 +25,8 @@ pub mod anchor_social {
     pub fn create_token_mint_account(ctx: Context<CreateTokenMintAccount>) -> Result<()> {
         instructions::token::create_token_mint_account(ctx)
     }
+
+    pub fn nft_mint(ctx: Context<NFTMint>, nft_id: String) -> Result<()> {
+        instructions::mpl_token_metadata::nft_mint_v1(ctx, nft_id)
+    }
 }
